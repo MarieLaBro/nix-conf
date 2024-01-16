@@ -9,6 +9,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+  
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   system.stateVersion = "23.11"; # Did you read the comment?
 
@@ -64,9 +66,9 @@
   xdg.portal.config.common.default = "gtk";
 
   # Tapping
-  services.xserver.libinput.enable = true;
-  services.xserver.libinput.touchpad.tapping= true;
-  services.xserver.libinput.touchpad.clickMethod = "clickfinger";
+  #services.xserver.libinput.enable = true;
+  #services.xserver.libinput.touchpad.tapping= true;
+  #services.xserver.libinput.touchpad.clickMethod = "clickfinger";
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -90,9 +92,16 @@
       google-chrome
       gnome.gnome-tweaks
       discord
-      kdenlive
+      vlc
+      kitty
+      
       gparted
       nodejs_21
+
+      #creative
+      gimp
+      krita
+      kdenlive
 
       # Gnome Extensions
       gnomeExtensions.appindicator
@@ -101,8 +110,28 @@
       gnomeExtensions.desktop-icons-ng-ding
       gnomeExtensions.blur-my-shell
       arc-theme 
+
+      # Gnome stuff
+      gnomeExtensions.appindicator
+      gnome.gnome-settings-daemon
+      papirus-icon-theme
     ];
   };
+
+  #Gnome stuff
+  environment.gnome.excludePackages = (with pkgs; [
+    #gnome-photos
+    gnome-tour
+  ]) ++ (with pkgs.gnome; [
+    #cheese # webcam tool
+    gnome-music
+    gnome-terminal
+    epiphany # web browser
+    geary # email reader
+    #gnome-characters
+    totem # video player
+  ]);
+  programs.dconf.enable = true;
 
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
@@ -125,7 +154,25 @@
     btop
     ranger
   ];
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  #Fonts
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+      noto-fonts
+      noto-fonts-cjk
+      noto-fonts-emoji
+    ];
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        serif = [ "Noto Serif" ];
+        sansSerif = [ "Noto Sans" ];
+        monospace = [ "JetBrainsMono Nerd Font" ];
+      };
+    };
+  };
 
   # Nvidia
   # Enable OpenGL
