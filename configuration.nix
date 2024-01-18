@@ -94,6 +94,7 @@
       discord
       vlc
       kitty
+      steam
       
       gparted
       nodejs_21
