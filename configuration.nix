@@ -43,13 +43,17 @@
   # Select internationalisation properties.
   i18n.defaultLocale = "fr_CA.UTF-8";
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
   security.pam.services.gdm.enableGnomeKeyring = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver = {
+    enable = true; # Enable the X11 windowing system.
+    displayManager.gdm.enable = true;
+    desktopManager = {
+      gnome.enable = true;
+      xterm.enable = false;
+      xfce.enable = true;
+    };
+  };
 
   # Configure keymap in X11
   services.xserver = {
@@ -99,6 +103,12 @@
       gparted
       nodejs_21
 
+      thunderbird
+      libreoffice-qt
+
+      gtk3
+      gtk4
+
       #creative
       gimp
       krita
@@ -128,7 +138,7 @@
     gnome-music
     gnome-terminal
     epiphany # web browser
-    geary # email reader
+    #geary # email reader
     #gnome-characters
     totem # video player
   ]);
@@ -137,7 +147,7 @@
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = "marielabro";
-  services.xserver.displayManager.gdm.wayland = false; # Use X11
+  services.xserver.displayManager.gdm.wayland = true; # Use X11
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
   systemd.services."getty@tty1".enable = false;
