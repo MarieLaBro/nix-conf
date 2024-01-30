@@ -48,11 +48,21 @@
   services.xserver = {
     enable = true; # Enable the X11 windowing system.
     displayManager.gdm.enable = true;
+    displayManager.defaultSession = "plasmawayland";
     desktopManager = {
       gnome.enable = true;
-      xterm.enable = false;
-      xfce.enable = true;
+      plasma5.enable = true;
     };
+  };
+
+  # Fix gnome+plasma integration
+  programs.ssh.askPassword = "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
+
+  # Theming
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
 
   # Configure keymap in X11
@@ -108,6 +118,7 @@
 
       gtk3
       gtk4
+      lxappearance
 
       #creative
       gimp
