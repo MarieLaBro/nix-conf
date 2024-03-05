@@ -44,25 +44,14 @@
   i18n.defaultLocale = "fr_CA.UTF-8";
 
   # Enable the GNOME Desktop Environment.
-  security.pam.services.gdm.enableGnomeKeyring = true;
   services.xserver = {
     enable = true; # Enable the X11 windowing system.
-    displayManager.gdm.enable = true;
+    displayManager.sddm.enable = true;
     displayManager.defaultSession = "plasmawayland";
+    displayManager.sddm.wayland.enable = true;
     desktopManager = {
-      gnome.enable = true;
       plasma5.enable = true;
     };
-  };
-
-  # Fix gnome+plasma integration
-  programs.ssh.askPassword = "${pkgs.gnome.seahorse}/libexec/seahorse/ssh-askpass";
-
-  # Theming
-  qt = {
-    enable = true;
-    platformTheme = "gnome";
-    style = "adwaita-dark";
   };
 
   # Configure keymap in X11
@@ -77,7 +66,7 @@
   # Flatpaks
   services.flatpak.enable = true;
 
-  xdg.portal.config.common.default = "gtk";
+  #xdg.portal.config.common.default = "gtk";
 
   # Tapping
   #services.xserver.libinput.enable = true;
@@ -104,7 +93,6 @@
       firefox
       vscode
       google-chrome
-      gnome.gnome-tweaks
       discord
       vlc
       kitty
@@ -124,45 +112,22 @@
       gimp
       krita
       kdenlive
+      obs-studio
 
-      # Gnome Extensions
-      gnomeExtensions.appindicator
-      gnomeExtensions.dash-to-panel
-      gnomeExtensions.arcmenu
-      gnomeExtensions.desktop-icons-ng-ding
-      gnomeExtensions.blur-my-shell
-      arc-theme 
-
-      # Gnome stuff
-      gnomeExtensions.appindicator
-      gnome.gnome-settings-daemon
       papirus-icon-theme
     ];
   };
 
-  #Gnome stuff
-  environment.gnome.excludePackages = (with pkgs; [
-    #gnome-photos
-    gnome-tour
-  ]) ++ (with pkgs.gnome; [
-    #cheese # webcam tool
-    gnome-music
-    gnome-terminal
-    epiphany # web browser
-    #geary # email reader
-    #gnome-characters
-    totem # video player
-  ]);
   programs.dconf.enable = true;
 
   # Enable automatic login for the user.
   services.xserver.displayManager.autoLogin.enable = true;
   services.xserver.displayManager.autoLogin.user = "marielabro";
-  services.xserver.displayManager.gdm.wayland = true; # Use X11
+  services.xserver.displayManager.gdm.wayland = true;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  #systemd.services."getty@tty1".enable = false;
+  #systemd.services."autovt@tty1".enable = false;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
