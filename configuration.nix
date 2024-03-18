@@ -65,6 +65,8 @@
 
   # Flatpaks
   services.flatpak.enable = true;
+  
+  hardware.bluetooth.enable = true;
 
   #xdg.portal.config.common.default = "gtk";
 
@@ -97,12 +99,19 @@
       vlc
       kitty
       steam
+      kodi
+      zoom #rencontres FDB
       
       gparted
       nodejs_21
 
       thunderbird
       libreoffice-qt
+
+      lutris
+      gamemode
+      gamescope
+      fish
 
       gtk3
       gtk4
@@ -117,6 +126,15 @@
       papirus-icon-theme
     ];
   };
+  programs.bash = {
+  interactiveShellInit = ''
+    if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
+    then
+      shopt -q login_shell && LOGIN_OPTION='--login' || LOGIN_OPTION=""
+      exec ${pkgs.fish}/bin/fish $LOGIN_OPTION
+    fi
+  '';
+};
 
   programs.dconf.enable = true;
 
