@@ -100,7 +100,7 @@
       kitty
       steam
       kodi
-      zoom #rencontres FDB
+      zoom-us #rencontres FDB
       
       gparted
       nodejs_21
@@ -116,6 +116,9 @@
       gtk3
       gtk4
       lxappearance
+
+      #Minecraft
+      temurin-jre-bin-17
 
       #creative
       gimp
