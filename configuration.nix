@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./unstable.nix
     ];
   
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -93,9 +94,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
-      vscode
-      google-chrome
-      discord
       vlc
       kitty
       steam
