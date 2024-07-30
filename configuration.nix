@@ -7,6 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
+      <nixos-hardware/dell/g3/3779>
       ./hardware-configuration.nix
       ./unstable.nix
     ];
@@ -45,11 +46,15 @@
   i18n.defaultLocale = "fr_CA.UTF-8";
 
   # Enable the GNOME Desktop Environment.
+  services.displayManager = {
+    defaultSession = "plasmawayland";
+    sddm = {
+      enable=true;
+      wayland.enable = true;
+    };
+  };
   services.xserver = {
     enable = true; # Enable the X11 windowing system.
-    displayManager.sddm.enable = true;
-    displayManager.defaultSession = "plasmawayland";
-    displayManager.sddm.wayland.enable = true;
     desktopManager = {
       plasma5.enable = true;
     };
@@ -57,8 +62,8 @@
 
   # Configure keymap in X11
   services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+    xkb.layout = "us";
+    xkb.variant = "";
   };
 
   # Enable CUPS to print documents.
@@ -98,13 +103,22 @@
       kitty
       steam
       kodi
-      zoom-us #rencontres FDB
+      zoom-us #rencontres FDLB
+      blender
       
       gparted
-      nodejs_21
+      nodejs_22
 
       thunderbird
       libreoffice-qt
+
+      #plasma
+      kdePackages.merkuro
+      kdePackages.kdepim-addons
+
+      #nixos utils
+      nh
+      nil
 
       lutris
       gamemode
@@ -127,6 +141,9 @@
       papirus-icon-theme
     ];
   };
+
+  
+
   programs.bash = {
   interactiveShellInit = ''
     if [[ $(${pkgs.procps}/bin/ps --no-header --pid=$PPID --format=comm) != "fish" && -z ''${BASH_EXECUTION_STRING} ]]
@@ -140,8 +157,8 @@
   programs.dconf.enable = true;
 
   # Enable automatic login for the user.
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = "marielabro";
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = "marielabro";
   #services.xserver.displayManager.gdm.wayland = true;
 
   # Workaround for GNOME autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
@@ -180,53 +197,12 @@
     };
   };
 
-  # TLP
-  services.tlp.enable = true;
-  services.power-profiles-daemon.enable = false; # Gnome??
-
   # Nvidia
-  # Enable OpenGL
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
+  # Enable OpenGL - Managed by hardware-config
 
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = [ "nvidia" ];
-
-  hardware.nvidia = {
-
-    # Modesetting is required.
-    modesetting.enable = true;
-
-    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.enable = false;
-    # Fine-grained power management. Turns off GPU when not in use.
-    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
-    powerManagement.finegrained = false;
-
-    # Use the NVidia open source kernel module (not to be confused with the
-    # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of
-    # supported GPUs is at:
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
-    # Only available from driver 515.43.04+
-    # Do not disable this unless your GPU is unsupported or if you have a good reason to.
-    open = true;
-
-    # Enable the Nvidia settings menu,
-    # accessible via `nvidia-settings`.
-    nvidiaSettings = true;
-
-    # Optionally, you may need to select the appropriate driver version for your specific GPU.
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-
-    prime = {
-      offload.enable = true;
-      # Make sure to use the correct Bus ID values for your system!
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    };
-  };
+  # RPCS3
+  security.pam.loginLimits = [
+    { domain = "*"; item = "memlock"; type = "hard"; value = "unlimited"; }
+    { domain = "*"; item = "memlock"; type = "soft"; value = "unlimited"; }
+  ];
 }

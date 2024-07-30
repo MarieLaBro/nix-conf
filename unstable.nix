@@ -7,5 +7,13 @@ in {
     vscode
     steam
     discord
+    rpcs3
+
+    # Minecraft
+    prismlauncher
+    ## JDKS
+    temurin-bin-8
+    temurin-bin-21
+    temurin-bin-11
   ];
 }
